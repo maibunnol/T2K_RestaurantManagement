@@ -1,0 +1,44 @@
+﻿.card {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-radius: 10px;
+    gap: 10px;
+    background: #333333;
+    width: 240px;
+    height: 350px;
+    color: #fff;
+}
+
+.add-card-button {
+    justify-content: center;
+    align-items: center;
+}
+
+.card .cover-container {
+    position: relative;
+}
+
+.edit-button {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    border: 1px solid #000;
+    bottom: 15px;
+    right: 10px;
+}
+
+.card .cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+}
+
+.card .title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.card .description {
+}

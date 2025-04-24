@@ -1,0 +1,12 @@
+﻿<div class="category">
+    <div class="name">@name</div>
+    <div class="item-count">@itemCount items</div>
+</div>
+
+@code {
+    [Parameter]
+    public string name { get; set; } = "Unknown";
+
+    [Parameter]
+    public int itemCount { get; set; } = 0;
+}

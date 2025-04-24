@@ -1,0 +1,21 @@
+﻿
+.top-bar {
+    display: flex;
+    padding: 8px 4px;
+    background-color: var(--charcoal-grey);
+    gap: 5px;
+    align-items: center;
+}
+
+.top-bar .toggle-sidebar-button, .top-bar .user {
+    background: none;
+    border: none;
+    padding: 0px 8px;
+    margin: 0px;
+}
+
+.top-bar .page-title {
+    color: #fff;
+    text-align: center;
+    flex-grow: 1;
+}

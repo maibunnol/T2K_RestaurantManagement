@@ -1,0 +1,52 @@
+﻿.category-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+
+.add-category-button img {
+    height: 40px;
+}
+
+
+.category {
+    display: flex;
+    flex-direction: column;
+    width: 157px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    background-color: var(--charcoal-grey);
+    border-radius: 10px;
+    padding: 15px 10px;
+}
+
+    .category:hover {
+        cursor: pointer;
+    }
+
+    .category .name {
+        position: relative;
+        width: fit-content;
+        margin-top: -1.00px;
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #ffffff;
+        font-size: 16px;
+        letter-spacing: 0;
+        line-height: normal;
+        white-space: nowrap;
+    }
+
+    .category .item-count {
+        position: relative;
+        width: fit-content;
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #d0d0d0;
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: normal;
+    }
