@@ -41,7 +41,60 @@ body {
     flex-direction: column;
     gap: 40px;
     padding: 20px;
+
 }
+
+
+.modal-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-window {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    border-radius: 20px;
+    background: var(--charcoal-grey);
+    padding: 15px;
+    gap:10px;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+input {
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--grey);
+    border: 1px solid var(--black);
+    font-size: 16px;
+    outline:none;
+    color:inherit;
+}
+
+button {
+    padding: 8px 4px;
+    border-radius: 50px;
+    border: 1px solid #000;
+    background: var(--black);
+    color: var(--dirty-white);
+}
+
+.button:hover {
+    background: var(--light-black);
+}
+
 
 /*#if (SampleContent)*/
 

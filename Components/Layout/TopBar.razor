@@ -1,5 +1,5 @@
 ﻿<div class="top-bar">
-    <button class="toggle-sidebar-button">
+    <button class="toggle-sidebar-button" @onclick="HandleClick">
         <img src="./assets/bars.svg" width="28" height="28">
     </button>
     <span class="page-title">Menu Management</span>
@@ -9,5 +9,10 @@
 </div>
 
 @code {
+    [Parameter] public EventCallback OnClick { get; set; }
 
+    private async Task HandleClick()
+    {
+        await OnClick.InvokeAsync();    
+    }
 }

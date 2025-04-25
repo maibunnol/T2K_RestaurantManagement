@@ -1,12 +1,83 @@
-﻿<div class="category-container">
-    <Category name="Breakfast" itemCount="15" />
-    <Category name="Lunch" itemCount="5" />
-    <Category name="Dinner" itemCount="8" />
-    <button class="category add-category-button">
+﻿@using T2K_RestaurantManagement.Models
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<Models.T2KDBContext> DbFactory
+
+<div class="category-container">
+    @foreach (var category in categories)
+    {
+        <Category name="@category.Title" itemCount="1" />
+    }
+
+    <button class="category add-category-button" @onclick="ToggleShowCreateModal">
         <img src="./assets/icon.svg" alt="">
     </button>
 </div>
 
-@code {
-
+@if (showCreateModal)
+{
+    <div class="modal-shadow">
+        <div class="modal-window">
+            <div style="display:flex;justify-content:space-between">
+                <span class="modal-title">Create category</span>
+                <button @onclick="CancelCreateCategory">X</button>
+            </div>
+            <input type="text" placeholder="name" @bind="newCategoryName" />
+            <button @onclick="CreateCategory">Create</button>
+            @if (errorMsg != null)
+            {
+                <span>@errorMsg</span>
+            }
+        </div>
+    </div>
 }
+
+@code {
+    private List<Models.Category> categories = new();
+    private Boolean showCreateModal = false;
+    private string newCategoryName { get; set; } = "";
+    private string? errorMsg { get; set; }
+
+    private void ToggleShowCreateModal() => showCreateModal = !showCreateModal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        categories = await db.categories.ToListAsync();
+    }
+
+    private async Task CreateCategory()
+    {
+        if (string.IsNullOrWhiteSpace(newCategoryName))
+        {
+            errorMsg = "Category name cannot be empty.";
+            return;
+        }
+
+        using var db = await DbFactory.CreateDbContextAsync();
+        var newCategory = new Models.Category
+        {
+            Title = newCategoryName
+        };
+
+        db.categories.Add(newCategory);
+        await db.SaveChangesAsync();
+        categories.Add(newCategory);
+
+
+        ResetVariables();
+    }
+
+    private void CancelCreateCategory()
+    {
+        ResetVariables();
+    }
+
+    private void ResetVariables()
+    {
+        newCategoryName = "";
+        errorMsg = null;
+        ToggleShowCreateModal();
+    }
+}
+

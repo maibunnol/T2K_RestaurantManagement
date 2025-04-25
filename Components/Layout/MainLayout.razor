@@ -1,12 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
 <main class="main-container">
-    <NavMenu />
+    <NavMenu isVisible="@showSideBar" />
     <div class="page-container">
-        <TopBar />
+        <TopBar OnClick="@ToggleSideBar" />
         <div class="page-content">
             @Body
         </div>
     </div>
 </main>
 
+@code {
+    private Boolean showSideBar { get; set; } = true;
+
+    private void ToggleSideBar()
+    {
+        showSideBar = !showSideBar;
+    }
+}

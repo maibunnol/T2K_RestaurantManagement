@@ -1,9 +1,20 @@
 .sidebar {
+    transition-duration: 0.2s;
+}
+
+.sidebar {
+    position: relative;
     display: flex;
     flex-direction: column;
-    width: 240px;
+    width: 0px;
+    left: -241px;
     height: 100vh;
     background-color: var(--charcoal-grey);
+}
+
+.sidebar.visible {
+    left: 0px;
+    width: 240px;
 }
 
 .sidebar .frame {
