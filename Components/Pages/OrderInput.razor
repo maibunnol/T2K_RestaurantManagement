@@ -1,0 +1,94 @@
+﻿@using T2K_RestaurantManagement.Models
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<Models.T2KDBContext> DbFactory
+@inject IJSRuntime JS
+
+@page "/orderinput"
+
+<div class="orderInput-container">
+	<div class="cart-container">
+		<h3>Cart (@currentMenuItems.Count items)</h3>
+		@foreach(var menuItem in currentMenuItems) {
+			<div class="cart-item">
+				<span>@menuItem.Name</span>
+				<span>@menuItem.Price $</span>
+				<button @onclick="() => RemoveItemFromCart(menuItem)">(X)</button>
+			</div>
+		}
+
+		<div><b>Total: @(currentMenuItems.Sum(item => item.Price))</b></div>
+		<button @onclick="HandlePlaceOrder">Place Order</button>
+	</div>
+	<div class="item-container">
+		@if (IsLoading)
+		{
+			<span>Loading... Please wait.</span>
+		} else
+		{
+			@foreach(var menuItem in allMenuItems)
+			{
+				<MenuItem menuItem="menuItem" OnClick="@(() => AddItemToCart(menuItem))"></MenuItem>
+			}
+		}
+	</div>
+</div>
+
+@code {
+	private List<Models.MenuItem> currentMenuItems = new();
+	private List<Models.MenuItem> allMenuItems = new();
+	private Boolean IsLoading = true;
+
+	protected override async Task OnInitializedAsync()
+	{
+		using var db = await DbFactory.CreateDbContextAsync();
+		allMenuItems = await db.MenuItems.ToListAsync();
+		IsLoading = false;
+		await JS.InvokeVoidAsync("console.log", $"Menu items loaded {allMenuItems.Count}");
+	}
+
+	private void RemoveItemFromCart(Models.MenuItem menuItem)
+	{
+		currentMenuItems.Remove(menuItem);
+	}
+
+	private void AddItemToCart(Models.MenuItem menuItem)
+	{
+		currentMenuItems.Add(menuItem);
+	}
+
+	private async Task HandlePlaceOrder()
+	{
+		if (!currentMenuItems.Any())
+		{
+			await JS.InvokeVoidAsync("alert", "Cart is empty. Add items to place an order.");
+			return;
+		}
+
+		using var db = await DbFactory.CreateDbContextAsync();
+
+		var newOrder = new Models.Order { Status = "Pending" };
+
+		foreach (var menuItem in currentMenuItems)
+		{
+			var orderItem = new OrderItem { Name = menuItem.Name };
+			newOrder.OrderItems.Add(orderItem);
+		}
+
+		db.Orders.Add(newOrder);
+
+
+		try
+		{
+			await db.SaveChangesAsync();
+			currentMenuItems.Clear();
+			await JS.InvokeVoidAsync("alert", "Order placed successfully!");
+		}
+		catch (Exception ex)
+		{
+			await JS.InvokeVoidAsync("console.log", $"Error: {ex.Message}");
+			await JS.InvokeVoidAsync("console.log", $"Inner Exception: {ex.InnerException?.Message}");
+			await JS.InvokeVoidAsync("alert", "An error occurred while placing the order.");
+		}
+	}
+}

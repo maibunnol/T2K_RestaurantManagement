@@ -12,7 +12,7 @@ namespace T2K_RestaurantManagement
     {
         public static void Seed(T2KDBContext context)
         {
-            if (context.categories.Any())
+            if (context.Categories.Any())
                 return;
 
             var items = new List<Category>
@@ -22,7 +22,7 @@ namespace T2K_RestaurantManagement
                 new Category { Title = "Dinner", Description = "Vista", ImagePath = "" }
             };
 
-            context.categories.AddRange(items);
+            context.Categories.AddRange(items);
             context.SaveChanges();
         }
     }

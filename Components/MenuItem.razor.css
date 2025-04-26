@@ -6,7 +6,7 @@
     gap: 10px;
     background: #333333;
     width: 240px;
-    height: 350px;
+    height: fit-content/*350px*/;
     color: #fff;
 }
 

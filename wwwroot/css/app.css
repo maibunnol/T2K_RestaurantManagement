@@ -16,6 +16,10 @@ html {
     color: var(--light-grey)
 }
 
+.flex {display: flex;}
+.flex-row {flex-direction:row;}
+.flex-col {flex-direction:column;}
+
 body {
     display: flex;
     flex-direction: column;
@@ -33,6 +37,7 @@ body {
 .page-container {
     display: flex;
     flex-direction: column;
+    flex-shrink: 1;
     flex-grow: 1;
 }
 
@@ -41,7 +46,7 @@ body {
     flex-direction: column;
     gap: 40px;
     padding: 20px;
-
+    margin-top: 50px;
 }
 
 

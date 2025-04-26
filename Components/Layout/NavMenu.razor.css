@@ -7,9 +7,18 @@
     display: flex;
     flex-direction: column;
     width: 0px;
+    flex-shrink: 0;
     left: -241px;
     height: 100vh;
     background-color: var(--charcoal-grey);
+}
+
+.sidebar .fixed-container {
+    width: inherit;
+    position: fixed;
+    background: inherit;
+    top: 0;
+    bottom: 0;
 }
 
 .sidebar.visible {

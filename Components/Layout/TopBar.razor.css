@@ -1,10 +1,13 @@
 ﻿
 .top-bar {
+    position:fixed;
+    width:100%;
     display: flex;
     padding: 8px 4px;
     background-color: var(--charcoal-grey);
     gap: 5px;
     align-items: center;
+    z-index: 100;
 }
 
 .top-bar .toggle-sidebar-button, .top-bar .user {
@@ -18,4 +21,11 @@
     color: #fff;
     text-align: center;
     flex-grow: 1;
+}
+
+.top-bar .fixed-container {
+    position: fixed;
+    z-index: 100;
+    right: 0;
+    left: 0;
 }

@@ -1,27 +1,34 @@
 ﻿<div class="card-container">
-    <Card
-        title="Waffles"
-        description="description for waffles here"
-        imagePath="https://healthfulblondie.com/wp-content/uploads/2023/03/nutella-waffles.jpg"
-    />
-
-    <Card
-        title="Waffles"
-        description="description for waffles here"
-        imagePath="https://healthfulblondie.com/wp-content/uploads/2023/03/nutella-waffles.jpg"
-    />
-
-    <Card
-        title="Waffles"
-        description="description for waffles here"
-        imagePath="https://healthfulblondie.com/wp-content/uploads/2023/03/nutella-waffles.jpg"
-    />
-
-    <div class="card add-card-button">
-        <img src="./icon.svg" width="150" alt="">
-    </div>
+	@foreach (var menuItem in MenuItems)
+	{
+		// pass the menuItem instance to the delete handler:
+		<MenuItem menuItem="@menuItem" OnDelete="@EventCallback.Factory.Create(this, () => OnDeleteMenuItem(menuItem))" />
+	}
+	@if (MenuItems.Count > 0)
+	{
+		<div class="card add-card-button" @onclick="HandleOnClickAddItem">
+			<img src="./assets/icon.svg" width="50" alt="">
+		</div>
+	}
 </div>
 
 @code {
+    [Parameter]
+	public required List<Models.MenuItem> MenuItems { get; set; }
+	
+	[Parameter]
+	public EventCallback OnClickAddItem { get; set; }
 
+	private void OnDeleteMenuItem(Models.MenuItem menuItem)
+	{
+		MenuItems = MenuItems.Where(m => m.Id != menuItem.Id).ToList();
+	}
+
+	private async Task HandleOnClickAddItem()
+	{
+		if (OnClickAddItem.HasDelegate)
+		{
+			await OnClickAddItem.InvokeAsync();
+		}
+	}
 }

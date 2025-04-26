@@ -2,11 +2,12 @@
 @using Microsoft.EntityFrameworkCore
 
 @inject IDbContextFactory<Models.T2KDBContext> DbFactory
+@inject IJSRuntime JS
 
 <div class="category-container">
     @foreach (var category in categories)
     {
-        <Category name="@category.Title" itemCount="1" />
+        <Category ThisCategory="@category" IsSelected="@(selectedCategoryId == category.Id)" OnSelect="HandleSelectCategory"/>
     }
 
     <button class="category add-category-button" @onclick="ToggleShowCreateModal">
@@ -33,6 +34,10 @@
 }
 
 @code {
+    [Parameter]
+    public EventCallback<int> OnSelectCategory { get; set; }
+
+    private int? selectedCategoryId { get; set; }
     private List<Models.Category> categories = new();
     private Boolean showCreateModal = false;
     private string newCategoryName { get; set; } = "";
@@ -43,8 +48,21 @@
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        categories = await db.categories.ToListAsync();
+        categories = await db.Categories.ToListAsync();
+        System.Diagnostics.Debug.WriteLine($"Categories loaded {categories.Count}");
+        //Console.WriteLine($"Categories loaded {categories.Count}");
     }
+
+    private async Task HandleSelectCategory(int categoryId)
+    {
+        var selectedCategory = categories.FirstOrDefault(c => c.Id == categoryId);
+        if (selectedCategory != null)
+        {
+            selectedCategoryId = selectedCategory.Id;
+            await OnSelectCategory.InvokeAsync(selectedCategory.Id);
+        }
+    }
+
 
     private async Task CreateCategory()
     {
@@ -60,12 +78,20 @@
             Title = newCategoryName
         };
 
-        db.categories.Add(newCategory);
-        await db.SaveChangesAsync();
-        categories.Add(newCategory);
+        try
+        {            
+            db.Categories.Add(newCategory);
+            await db.SaveChangesAsync();
+            categories.Add(newCategory);
 
+            ResetVariables();
 
-        ResetVariables();
+        } catch (Exception e)
+        {
+            await JS.InvokeVoidAsync("console.log", e.Message);
+            await JS.InvokeVoidAsync("alert", "An error occurred while placing the order.");
+
+        }
     }
 
     private void CancelCreateCategory()

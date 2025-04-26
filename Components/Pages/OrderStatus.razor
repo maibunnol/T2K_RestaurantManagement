@@ -1,0 +1,82 @@
+﻿@using T2K_RestaurantManagement.Models
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<Models.T2KDBContext> DbFactory
+@inject IJSRuntime JS
+
+@page "/orderstatus"
+
+<h3>OrderStatus</h3>
+<div class="orders">
+	@foreach (var order in orders)
+	{
+		<div class="order">
+			<div>
+				<div class="order-title"><b>Order @order.Id</b></div>
+				<div class="order-items">
+					@foreach (var item in order.OrderItems)
+					{
+						<div class="order-item">
+							<span>@item.Name</span>
+							<InputCheckbox
+							Value="@item.IsCompleted"
+							ValueExpression="() => item.IsCompleted"
+							ValueChanged="(value) => UpdateOrderStatus(value, item, order)" />
+						</div>
+					}
+				</div>
+			</div>
+			<button
+			class="order-status"
+			disabled="@(order.OrderItems.All(item => item.IsCompleted) == false)"
+			@onclick="() => NotifyOrderStatus(order)"
+			>
+				@order.Status
+			</button>
+		</div>
+	}
+</div>
+
+@code {
+	private List<Models.Order> orders = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		using var db = await DbFactory.CreateDbContextAsync();
+		orders = await db.Orders
+			.Include(o => o.OrderItems)
+			.ToListAsync();
+	}
+
+	private async Task UpdateOrderStatus(bool value, OrderItem item, Order order)
+	{
+		using var db = await DbFactory.CreateDbContextAsync();
+
+		item.IsCompleted = value;
+
+		if (order.OrderItems.All(item => item.IsCompleted) == false)
+		{
+			await JS.InvokeVoidAsync("console.log", "order is pending");
+			order.Status = "Pending";
+			await db.SaveChangesAsync();
+			return;
+		}
+
+		order.Status = "Ready";
+		await db.SaveChangesAsync();
+	}
+
+	private async Task NotifyOrderStatus(Order order)
+	{
+		await JS.InvokeVoidAsync("alert", $"Order {order.Id} is ready.");
+		using var db = await DbFactory.CreateDbContextAsync();
+		db.Orders.Remove(order);
+		await db.SaveChangesAsync();
+		ClearReadyOrders();
+	}
+
+	private void ClearReadyOrders()
+	{
+		orders = orders.Where(order => order.Status.Equals("Pending")).ToList();		
+	}
+}

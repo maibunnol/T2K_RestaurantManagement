@@ -1,9 +1,108 @@
-﻿@page "/menumanagement"
+﻿@using T2K_RestaurantManagement.Models
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<Models.T2KDBContext> DbFactory
+@inject IJSRuntime JS
+
+@page "/"
 
 <SearchBar />
-<Categories />
-<Cards />
+<Categories OnSelectCategory="GetTaskAsync" />
+
+@if (currentMenuItems.Count == 0)
+{
+	<span>No items to show. @(selectedCategoryId == null ? "Choose a category to add items." : "")</span>
+	@if (selectedCategoryId != null)
+	{
+		<button @onclick="ToggleShowCreateModal">Add new</button>	
+	}
+}
+<Cards MenuItems="@currentMenuItems" OnClickAddItem="@ToggleShowCreateModal" />	   
+
+@if (showCreateModal)
+{
+	<div class="modal-shadow">
+		<div class="modal-window">
+			<div style="display:flex;justify-content:space-between">
+				<span class="modal-title">Create category</span>
+				<button @onclick="CancelCreateMenuItem">X</button>
+			</div>
+			<input type="text" placeholder="name" @bind="newMenuItemName" />
+			<input type="text" placeholder="description" @bind="newMenuItemDescription" />
+			<input type="number" placeholder="price" @bind="newMenuItemPrice" />
+			<input type="text" placeholder="imagepath" @bind="newMenuItemImagePath" />
+
+			<button @onclick="CreateNewMenuItem">Create</button>
+			@if (errorMsg != null)
+			{
+				<span>@errorMsg</span>
+			}
+		</div>
+	</div>
+}
 
 @code {
+	private List<Models.MenuItem> currentMenuItems = new();
+	private int? selectedCategoryId { get; set; }
+	private Boolean showCreateModal = false;
+	private void ToggleShowCreateModal() => showCreateModal = !showCreateModal;
+	private string? errorMsg { get; set; }
 
+	private string newMenuItemName { get; set; } = "";
+	private string? newMenuItemDescription { get; set; } = "";
+	private decimal newMenuItemPrice { get; set; } = 0;
+	private string? newMenuItemImagePath { get; set; } = "";
+
+	private async Task GetTaskAsync(int categoryId)
+	{
+		selectedCategoryId = categoryId;
+		await LoadMenuItems(categoryId);
+		//		System.Diagnostics.Debug.WriteLine($"Menu items loaded {currentMenuItems.Count}");
+	}
+
+	private async Task LoadMenuItems(int categoryId)
+	{
+		using var db = await DbFactory.CreateDbContextAsync();
+		currentMenuItems =
+			await db.MenuItems
+			.Where(m => m.CategoryId == categoryId)
+			.ToListAsync();
+
+		await JS.InvokeVoidAsync("console.log", $"Category selected {categoryId}, items loaded: {currentMenuItems.Count}");
+	}
+
+	private void CancelCreateMenuItem()
+	{
+		showCreateModal = false;
+		newMenuItemName = "";
+		newMenuItemDescription = "";
+		newMenuItemPrice = 0;
+		newMenuItemImagePath = "";
+		errorMsg = null;
+
+	}
+
+	private async Task CreateNewMenuItem()
+	{
+		using var db = await DbFactory.CreateDbContextAsync();
+		var newMenuItem = new Models.MenuItem
+		{
+			Name = newMenuItemName,
+			Description = newMenuItemDescription,
+			Price = newMenuItemPrice,
+			CategoryId = selectedCategoryId.Value,
+			ImagePath = newMenuItemImagePath
+		};
+
+		await db.MenuItems.AddAsync(newMenuItem);
+		await db.SaveChangesAsync();
+		await LoadMenuItems(selectedCategoryId.Value);
+		ToggleShowCreateModal();
+		newMenuItemName = "";
+		newMenuItemDescription = "";
+		newMenuItemPrice = 0;
+		newMenuItemImagePath = "";
+		errorMsg = null;
+
+	}
 }

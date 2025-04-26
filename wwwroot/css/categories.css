@@ -23,6 +23,10 @@
     padding: 15px 10px;
 }
 
+.category.selected {
+    background-color: var(--black);
+}
+
     .category:hover {
         cursor: pointer;
     }

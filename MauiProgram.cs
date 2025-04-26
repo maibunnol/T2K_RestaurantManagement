@@ -22,12 +22,12 @@ namespace T2K_RestaurantManagement
             });
 
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddDbContextFactory<Models.T2KDBContext>(options =>
-                options.UseSqlite(
-                    builder.Configuration.GetConnectionString("dbConnection") ??
-                    throw new InvalidOperationException("Connection string 'dbConnection' not found."))
-            );
 
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "restaurant2.db");
+
+            builder.Services.AddDbContextFactory<Models.T2KDBContext>(options =>
+                options.UseSqlite($"Data Source={dbPath}")
+            );
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

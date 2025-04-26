@@ -1,21 +1,28 @@
 ﻿<div class="sidebar @(isVisible ? "visible" : "")">
-    <div class="frame">
-        <img class="logo" src="./assets/logo.png" />
+    <div class="fixed-container">
+        <div class="frame">
+            <img class="logo" src="./assets/logo.png" />
+        </div>
+
+        <NavLink href="" Match="NavLinkMatch.All">
+            <div class="navigation-item">Menu Management</div>
+        </NavLink>
+
+        <NavLink href="orderinput">
+            <div class="navigation-item">Order Input</div>
+        </NavLink>
+
+        <NavLink href="orderstatus">
+            <div class="navigation-item">Order Status</div>
+        </NavLink>
     </div>
-    <NavLink href="" Match="NavLinkMatch.All">
-        <div class="navigation-item selected">Home</div>
-    </NavLink>
+@*
     <NavLink href="kitchendashboard">
         <div class="navigation-item">Kitchen Dashboard</div>
     </NavLink>
-    <NavLink href="menumanagement">
-        <div class="navigation-item">Menu Management</div>
-    </NavLink>
     <div class="navigation-item">Inventory Tracking</div>
-    <div class="navigation-item">Order Input</div>
-    <div class="navigation-item">Kitchen Dashboard</div>
-    <div class="navigation-item">Order Status</div>
-    <div class="navigation-item">Table Management</div>
+    <div class="navigation-item">Kitchen Dashboard</div>       
+    <div class="navigation-item">Table Management</div>*@
 </div>
 
 @code {

@@ -1,12 +1,20 @@
-﻿<div class="category">
-    <div class="name">@name</div>
-    <div class="item-count">@itemCount items</div>
+﻿<div class="category @(IsSelected ? "selected":"")" @onclick="Select">
+	<div class="name">@ThisCategory.Title</div>
+	<div class="item-count">0 items</div>
 </div>
 
 @code {
-    [Parameter]
-    public string name { get; set; } = "Unknown";
+	[Parameter]
+	public EventCallback<int> OnSelect { get; set; }
 
-    [Parameter]
-    public int itemCount { get; set; } = 0;
+	[Parameter]
+	public bool IsSelected { get; set; }
+
+	[Parameter]
+	public required Models.Category ThisCategory { get; set; }
+
+	private async Task Select()
+	{
+		await OnSelect.InvokeAsync(ThisCategory.Id);
+	}
 }

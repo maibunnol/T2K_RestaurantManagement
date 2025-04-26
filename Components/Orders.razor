@@ -1,0 +1,70 @@
+﻿<div class="order-container">
+    <div class="header">
+        <h1>Order Management - Kitchen</h1>
+        <div>Order Status</div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">T2T</div>
+            <a href="#" class="nav-link">Kitchen Dashboard</a>
+            <a href="#" class="nav-link">Menu Management</a>
+            <a href="#" class="nav-link">Inventory Tracking</a>
+            <a href="#" class="nav-link">Order Input</a>
+            <a href="#" class="nav-link active">Order Status</a>
+            <a href="#" class="nav-link">Table Management</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="order-grid">
+                <!-- Order Card for Table 1 -->
+                <div class="order-card">
+                    <h3>Table 1</h3>
+                    <div class="order-item">
+                        <input type="checkbox" checked />
+                        <span>Pancakes</span>
+                    </div>
+                    <button class="btn" @onclick="() => StartPreparing(1)">Start Preparing</button>
+                </div>
+
+                <!-- Order Card for Table 2 -->
+                <div class="order-card">
+                    <h3>Table 2</h3>
+                    <div class="order-item">
+                        <input type="checkbox" checked />
+                        <span>Pancakes</span>
+                    </div>
+                    <div class="status">Preparing...</div>
+                    <button class="btn" @onclick="() => MarkReady(2)">Ready</button>
+                </div>
+
+                <!-- Order Card for Table 3 -->
+                <div class="order-card">
+                    <h3>Table 3</h3>
+                    <div class="order-item">
+                        <input type="checkbox" checked />
+                        <span>Pancakes</span>
+                    </div>
+                    <div class="status">Serving...</div>
+                    <button class="btn" disabled>Serving...</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+@code {
+    private void StartPreparing(int tableNumber)
+    {
+        // Logic to start preparing the order for the given table
+        Console.WriteLine($"Start preparing order for Table {tableNumber}");
+    }
+
+    private void MarkReady(int tableNumber)
+    {
+        // Logic to mark the order as ready for the given table
+        Console.WriteLine($"Order for Table {tableNumber} is ready");
+    }
+}

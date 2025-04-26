@@ -1,0 +1,50 @@
+﻿@using T2K_RestaurantManagement.Models
+@using Microsoft.EntityFrameworkCore
+
+@inject IDbContextFactory<Models.T2KDBContext> DbFactory
+
+<div class="card" @onclick="HandleOnClick">
+    <div class="cover-container">
+        <!--img class="cover" src="@menuItem.ImagePath" /-->
+        <!--button class="edit-button">E</!--button-->
+        @if (OnDelete.HasDelegate)
+        {
+            <button @onclick="DeleteMenuItem">Del</button>
+
+        }
+    </div>
+    <div class="title">@menuItem.Name</div>
+    <div>@menuItem.Price</div>
+    <div class="description">@menuItem.Description</div>
+</div>
+
+
+@code {
+    [Parameter]
+    public required Models.MenuItem menuItem { get; set; }
+
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+
+    [Parameter]
+	public EventCallback OnClick { get; set; }
+
+    private async Task DeleteMenuItem()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        db.MenuItems.Remove(menuItem);
+        await db.SaveChangesAsync();
+        if (OnDelete.HasDelegate)
+        {
+            await OnDelete.InvokeAsync();
+        }
+    }
+
+	private async Task HandleOnClick()
+	{
+		if (OnClick.HasDelegate)
+		{
+			await OnClick.InvokeAsync();
+		}
+	}
+}
