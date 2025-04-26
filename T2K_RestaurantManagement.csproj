@@ -61,7 +61,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Components\Pages\Home._razor" />
+      <Content Include="README.md" />
     </ItemGroup>
 
     <ItemGroup>

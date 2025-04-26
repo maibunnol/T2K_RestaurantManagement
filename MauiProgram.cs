@@ -23,7 +23,7 @@ namespace T2K_RestaurantManagement
 
             builder.Services.AddMauiBlazorWebView();
 
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "restaurant2.db");
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "restaurant4.db");
 
             builder.Services.AddDbContextFactory<Models.T2KDBContext>(options =>
                 options.UseSqlite($"Data Source={dbPath}")
